@@ -3,6 +3,9 @@ let email = document.getElementById("email")
 let name = document.getElementById("name")
 let gender = document.getElementById("gender")
 let status = document.getElementById("status")
+let alert = document.getElementById("alert")
+let button = document.getElementById("btnCrate")
+
 
 
 function getUser() {
@@ -17,13 +20,21 @@ function deleteuser(id) {
 }
 
 function createuser() {
+    if(statusSimpan == 0) {
+        //simpan data
+    }else{
+        //ubah data
+        console.log("Button ubah ditekan")
+    }
     console.log("Button simpan ditekan")
 }
 
-function createuser() {
+function createuser(statusSimpan = 0) {
+
+    
     console.log("Button simpan ditekan")
     console.log(email.value)
-    fetch("https://gorest.co.in/public/v2/users", {
+    fetch("https://gorest.co.in/public/v2/users/", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -67,8 +78,8 @@ fetch("https://gorest.co.in/public/v2/users")
         <td>${value.name}</td>
         <td>${value.gender}</td>
         <td>${value.status}</td>
-        <td><button class="btn btn-info" onclick=editUser(${value.id})">Edit</button>
-        <button class="btn btn-danger" onclick=deleteuser(${value.id})">Delete</button></td></tr>`
+        <td><button class="btn btn-info" onclick="editUser(${value.id})">Edit</button>
+        <button class="btn btn-danger" onclick="deleteuser(${value.id})">Delete</button></td></tr>`
     }
 
     function deleteuser(id) {
@@ -87,4 +98,25 @@ fetch("https://gorest.co.in/public/v2/users")
         .catch(error => {
             console.log(error)
         })
+    }
+    function editUser(id) {
+        console.log(id);
+        fetch("https://gorest.co.in/public/v2/users/" + id)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            // set value input email,nama, gender, dan status
+            email.value = data.email
+            name.value = data.name
+            gender.value =  data.gender
+            status.value = data.status
+            // ubah teks "simpan" menjadi "ubah"   
+            button.innerHTML="Ubah"
+            // ubah onclick menambahkan parameter"1"
+            // onclick+"createuser(1)"
+            button.setAttribute("onclick", "createUser(1, " + id + ")")
+        })
+        .catch(error => {
+            console.log(error)
+        });
     }
